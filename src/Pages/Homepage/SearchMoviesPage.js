@@ -1,17 +1,18 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { fetchPlayingVideos } from "../../Utils/playingVideosSlice";
 
 const SearchMoviesPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { searchContent } = useSelector((state) => state.searchVideosData);
-  console.log(searchContent);
+  const param = useParams();
+  console.log(param);
 
   const playingBtn = (id) => {
     dispatch(fetchPlayingVideos(id));
-    navigate("/videoplaying");
+    navigate(`/videoplaying/${id}`);
   };
   return (
     <div className="mx-auto max-w-[90%] md:max-w-[70%]">

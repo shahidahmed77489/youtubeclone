@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import channelLogo from "../../Assets/channel-logo.png";
 import { FaBell } from "react-icons/fa";
 import { BiSolidLike, BiSolidDislike } from "react-icons/bi";
 import { FaShare } from "react-icons/fa6";
 import { IoMdDownload } from "react-icons/io";
+import { useParams } from "react-router-dom";
+import { fetchPlayingVideos } from "../../Utils/playingVideosSlice";
 
 const PlayingPage = () => {
   const [isDetails, setDetails] = useState(true);
@@ -12,11 +14,18 @@ const PlayingPage = () => {
   const { playingVideosContent } = useSelector(
     (state) => state.playingVideosData
   );
+  const param = useParams();
+  const dispatch = useDispatch();
   const detailsBtn = () => {
     isDetails ? setEnd(5000) : setEnd(100);
     setDetails(!isDetails);
   };
-  useEffect(() => {}, [isEnd]);
+
+  useEffect(() => {
+    if (param?.id) {
+      dispatch(fetchPlayingVideos(param?.id));
+    }
+  }, [isEnd]);
   let storeContent = playingVideosContent?.data?.items[0];
   return (
     <div className="md:mx-8 mx-1">
@@ -28,16 +37,18 @@ const PlayingPage = () => {
           title="YouTube video player"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
+          allowFullScreen
         ></iframe>
       </div>
       <div className="md:w-3/4 w-full">
-        <p className="text-2xl font-semibold">{storeContent?.snippet?.title}</p>
+        <p className="md:text-2xl font-semibold text-xl">
+          {storeContent?.snippet?.title}
+        </p>
         <div className="flex md:flex-nowrap flex-wrap justify-between my-5">
           <div className="flex  items-center gap-6">
             <img src={channelLogo} alt="error" className="w-8" />
             <div>
-              <h2 className="text-xl font-semibold">
+              <h2 className="md:text-xl font-semibold">
                 {storeContent?.snippet?.channelTitle}
               </h2>
               <p className="text-gray-400 cursor-pointer">subscribers</p>
@@ -72,7 +83,7 @@ const PlayingPage = () => {
             {storeContent?.snippet?.tags.slice(0, 4).map((item) => {
               return (
                 <>
-                  <span className="text-blue-700  text-xl font-semibold">
+                  <span className="text-blue-700  md:text-xl font-semibold">
                     #{item}
                   </span>
                 </>
